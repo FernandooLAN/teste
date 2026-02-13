@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Nós</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* Gradiente um pouco mais quente/romântico */
+            background: linear-gradient(135deg, #fff0f5 0%, #e6e6fa 100%);
+            font-family: 'Quicksand', sans-serif;
+            color: #4a4a4a;
+        }
+
+        /* O container principal (o cartão) */
+        .card {
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(233, 30, 99, 0.15);
+            backdrop-filter: blur(12px);
+            text-align: center;
+            max-width: 90%;
+            width: 400px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+        }
+
+        /* Títulos */
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            color: #d81b60;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            color: #888;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* O Carrossel de Fotos */
+        .carousel {
+            width: 280px;
+            height: 280px; /* Quadrado ou retangular, você escolhe */
+            margin: 0 auto;
+            position: relative;
+            border-radius: 20px; /* Bordas arredondadas nas fotos */
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            border: 5px solid #fff;
+        }
+
+        .carousel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Garante que a foto não estique */
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out; /* Transição suave */
+        }
+
+        .carousel img.active {
+            opacity: 1;
+        }
+
+        /* Mensagem extra opcional embaixo */
+        .footer-msg {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #d81b60;
+            font-weight: 500;
+        }
+
+        /* Área das partículas (fundo) */
+        #tsparticles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="tsparticles"></div>
+
+    <div class="card">
+        <h2>De: Fefo</h2>
+        <h1>Para: Isa</h1>
+        
+        <div class="carousel">
+            <img src="foto1.jpeg" class="active" alt="Momento 1">
+            <img src="foto2.jpeg" alt="Momento 2">
+            <img src="foto3.jpeg" alt="Momento 3">
+            <img src="foto4.jpeg" alt="Momento 4">
+            <img src="foto5.jpeg" alt="Momento 5">
+            <img src="foto6.jpeg" alt="Momento 6">
+            <img src="foto7.jpeg" alt="Momento 7">
+            <img src="foto8.jpeg" alt="Momento 8">
+        </div>
+
+        <p class="footer-msg">Guardando nossos momentos ❤️</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+    
+    <script>
+        /* --- LÓGICA DO CARROSSEL (SLIDESHOW) --- */
+        const images = document.querySelectorAll('.carousel img');
+        let currentIdx = 0;
+
+        function nextImage() {
+            // Remove a classe 'active' da foto atual
+            images[currentIdx].classList.remove('active');
+            
+            // Calcula a próxima (volta pro zero se chegar no fim)
+            currentIdx = (currentIdx + 1) % images.length;
+            
+            // Adiciona a classe 'active' na próxima
+            images[currentIdx].classList.add('active');
+        }
+
+        // Troca de foto a cada 3.5 segundos (3500ms)
+        setInterval(nextImage, 3500);
+
+
+        /* --- LÓGICA DAS PARTÍCULAS (CORAÇÕES E FLORES) --- */
+        tsParticles.load("tsparticles", {
+            fpsLimit: 60,
+            particles: {
+                number: {
+                    value: 40, // Quantidade de elementos na tela
+                    density: { enable: true, value_area: 800 }
+                },
+                // Aqui definimos que teremos formas variadas
+                shape: {
+                    type: ["heart", "char"], 
+                    character: [
+                        { value: ["🌸", "🌹", "🌻", "✨"], font: "Verdana", style: "", weight: "400", fill: true }
+                    ]
+                },
+                color: {
+                    value: ["#ff7eb3", "#ff758c", "#ffffff"] // Cores dos corações vetoriais
+                },
+                size: {
+                    value: 20, // Tamanho base
+                    random: { enable: true, minimumValue: 10 } // Variação de tamanho
+                },
+                move: {
+                    enable: true,
+                    speed: 1.5, // Velocidade lenta e suave
+                    direction: "top", // Sobem como bolhas
+                    random: false,
+                    straight: false,
+                    out_mode: "out",
+                    attract: { enable: false, rotateX: 600, rotateY: 1200 }
+                },
+                opacity: {
+                    value: 0.6,
+                    random: true,
+                    anim: { enable: true, speed: 0.5, opacity_min: 0.1, sync: false }
+                }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "bubble" },
+                    resize: true
+                },
+                modes: {
+                    bubble: { distance: 150, size: 30, duration: 2, opacity: 1 }
+                }
+            },
+            retina_detect: true
+        });
+    </script>
+</body>
+</html>
