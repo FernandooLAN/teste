@@ -2,98 +2,109 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Para Nós</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            height: 100vh;
+            /* Usamos dvh (dynamic viewport height) para ignorar a barra do navegador no celular */
+            height: 100dvh; 
             overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            /* Gradiente um pouco mais quente/romântico */
             background: linear-gradient(135deg, #fff0f5 0%, #e6e6fa 100%);
             font-family: 'Quicksand', sans-serif;
             color: #4a4a4a;
         }
 
-        /* O container principal (o cartão) */
+        /* O container principal */
         .card {
             z-index: 10;
             background: rgba(255, 255, 255, 0.85);
-            padding: 40px;
-            border-radius: 30px;
+            /* Padding menor para telas pequenas */
+            padding: 25px; 
+            border-radius: 25px;
             box-shadow: 0 15px 35px rgba(233, 30, 99, 0.15);
             backdrop-filter: blur(12px);
             text-align: center;
-            max-width: 90%;
-            width: 400px;
+            /* Garante que cabe em qualquer celular */
+            width: 90%; 
+            max-width: 380px; 
             border: 2px solid rgba(255, 255, 255, 0.8);
             position: relative;
+            /* Animação suave ao abrir */
+            animation: floatUp 1s ease-out;
         }
 
-        /* Títulos */
         h1 {
             font-family: 'Dancing Script', cursive;
-            font-size: 2.8rem;
+            /* Tamanho de fonte responsivo */
+            font-size: clamp(2rem, 8vw, 2.8rem); 
             color: #d81b60;
             margin-bottom: 5px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+            line-height: 1.2;
         }
 
         h2 {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #888;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             letter-spacing: 2px;
             text-transform: uppercase;
         }
 
-        /* O Carrossel de Fotos */
+        /* O Carrossel Responsivo */
         .carousel {
-            width: 280px;
-            height: 280px; /* Quadrado ou retangular, você escolhe */
+            /* Ocupa a largura disponível do cartão */
+            width: 100%;
+            max-width: 280px; 
+            /* Mantém a proporção quadrada automaticamente */
+            aspect-ratio: 1 / 1; 
             margin: 0 auto;
             position: relative;
-            border-radius: 20px; /* Bordas arredondadas nas fotos */
+            border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-            border: 5px solid #fff;
+            border: 4px solid #fff;
         }
 
         .carousel img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Garante que a foto não estique */
+            object-fit: cover;
             position: absolute;
             top: 0;
             left: 0;
             opacity: 0;
-            transition: opacity 1.5s ease-in-out; /* Transição suave */
+            transition: opacity 1.5s ease-in-out;
         }
 
         .carousel img.active {
             opacity: 1;
         }
 
-        /* Mensagem extra opcional embaixo */
         .footer-msg {
             margin-top: 20px;
             font-size: 0.9rem;
             color: #d81b60;
-            font-weight: 500;
+            font-weight: 600;
         }
 
-        /* Área das partículas (fundo) */
         #tsparticles {
             position: absolute;
             width: 100%;
             height: 100%;
             z-index: 1;
+        }
+
+        @keyframes floatUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -122,51 +133,42 @@
     <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
     
     <script>
-        /* --- LÓGICA DO CARROSSEL (SLIDESHOW) --- */
+        /* --- CARROSSEL --- */
         const images = document.querySelectorAll('.carousel img');
         let currentIdx = 0;
 
         function nextImage() {
-            // Remove a classe 'active' da foto atual
+            if(images.length === 0) return; // Evita erro se não tiver fotos
             images[currentIdx].classList.remove('active');
-            
-            // Calcula a próxima (volta pro zero se chegar no fim)
             currentIdx = (currentIdx + 1) % images.length;
-            
-            // Adiciona a classe 'active' na próxima
             images[currentIdx].classList.add('active');
         }
 
-        // Troca de foto a cada 3.5 segundos (3500ms)
         setInterval(nextImage, 3500);
 
-
-        /* --- LÓGICA DAS PARTÍCULAS (CORAÇÕES E FLORES) --- */
+        /* --- PARTÍCULAS --- */
         tsParticles.load("tsparticles", {
             fpsLimit: 60,
             particles: {
                 number: {
-                    value: 40, // Quantidade de elementos na tela
+                    value: 30, // Reduzi um pouco para economizar bateria do celular
                     density: { enable: true, value_area: 800 }
                 },
-                // Aqui definimos que teremos formas variadas
                 shape: {
                     type: ["heart", "char"], 
                     character: [
                         { value: ["🌸", "🌹", "🌻", "✨"], font: "Verdana", style: "", weight: "400", fill: true }
                     ]
                 },
-                color: {
-                    value: ["#ff7eb3", "#ff758c", "#ffffff"] // Cores dos corações vetoriais
-                },
+                color: { value: ["#ff7eb3", "#ff758c", "#ffffff"] },
                 size: {
-                    value: 20, // Tamanho base
-                    random: { enable: true, minimumValue: 10 } // Variação de tamanho
+                    value: 15, // Levemente menor para telas pequenas
+                    random: { enable: true, minimumValue: 8 }
                 },
                 move: {
                     enable: true,
-                    speed: 1.5, // Velocidade lenta e suave
-                    direction: "top", // Sobem como bolhas
+                    speed: 2,
+                    direction: "top",
                     random: false,
                     straight: false,
                     out_mode: "out",
@@ -179,13 +181,13 @@
                 }
             },
             interactivity: {
-                detect_on: "canvas",
+                detect_on: "window", // Detecta toque na tela inteira
                 events: {
-                    onhover: { enable: true, mode: "bubble" },
+                    onclick: { enable: true, mode: "push" }, // Ao tocar, cria mais corações
                     resize: true
                 },
                 modes: {
-                    bubble: { distance: 150, size: 30, duration: 2, opacity: 1 }
+                    push: { particles_nb: 3 } // Cria 3 partículas ao tocar
                 }
             },
             retina_detect: true
